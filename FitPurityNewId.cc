@@ -1,3 +1,4 @@
+gSystem->Load("libRoofit"); 
 using namespace RooFit;
 using namespace RooStats ;
 //#include "./CMS_lumi.C"
@@ -29,7 +30,6 @@ double deltaPhi(double phi1,double phi2)
   while (result <= -TMath::Pi()) result += 2*TMath::Pi();
   return result;
 }
-
 
 RooArgSet* defineVariables() {
   RooRealVar* ph_eta_sig_livia = new RooRealVar("pPurityheta", "eta(g)",-5,5,"");
