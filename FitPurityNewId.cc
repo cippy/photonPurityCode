@@ -76,7 +76,8 @@ Float_t maxFit = 12;
 //Int_t nbins =30;//40;//80
 Int_t nbins =24;//40;//80
 //Int_t nbins =40;//40;//80
-void AddData(RooWorkspace*);
+
+void AddData(RooWorkspace*, TTree*);
 void runfits(RooWorkspace* w,std::string region, std::string phid, std::string ptcut);
 void PlotBkgTemplates(RooWorkspace* w);
 void AddSignalMCRND(RooWorkspace* w);
@@ -92,7 +93,12 @@ RooRealVar* ModelFit(RooWorkspace* w);
 void PlotAllSystUnc(RooWorkspace* w,std::string region, std::string id);
 void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id);
 void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistPdf* genSig, RooHistPdf* genBkg, RooHistPdf* fitSig, RooHistPdf* fitBkg, TString Tsig, TString Tbkg);
-RooFitResult*  ModelFit(RooWorkspace*);
+//RooFitResult*  ModelFit(RooWorkspace*);
+void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree);
+void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree);
+void AddBkgTemplate(RooWorkspace* w, TTree* tree);
+void AddSignalMCRNDRC08(RooWorkspace* w);
+
 
 double deltaPhi(double phi1,double phi2)
 {
@@ -247,15 +253,15 @@ void runAllfits(std::string phid){
   //print summary table MEDIUM
   std::cout<<"\\begin{table}[tb]"<<std::endl;
   std::cout<<"\\begin{tabular}{||c|c||}"<<std::endl;
-  std::cout<<"$\\p_T$ -- region \& Purity  \\\\"<<std::endl;
+  std::cout<<"$\\p_T$ -- region & Purity  \\\\"<<std::endl;
   std::cout<<"\\hline"<<std::endl;
-  // std::cout<<" 175-250 GeV \& "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<"0.0285(syst)    \\\\"<<std::endl;  
-  //std::cout<<" 250-300 GeV \& "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<"0.0217(syst)   \\\\"<<std::endl;   
-  //std::cout<<" 300-Inf GeV \& "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
-  //std::cout<<" 350-Inf GeV \& "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
-  std::cout<<" 175-250 GeV \& "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut1->format(3, "EXP") <<" (syst)    \\\\"<<std::endl;  
-  std::cout<<" 250-300 GeV \& "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut2->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
-  std::cout<<" 300-Inf GeV \& "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut3->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  // std::cout<<" 175-250 GeV & "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<"0.0285(syst)    \\\\"<<std::endl;  
+  //std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<"0.0217(syst)   \\\\"<<std::endl;   
+  //std::cout<<" 300-Inf GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
+  //std::cout<<" 350-Inf GeV & "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
+  std::cout<<" 175-250 GeV & "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut1->format(3, "EXP") <<" (syst)    \\\\"<<std::endl;  
+  std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut2->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 300-Inf GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut3->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
  
   std::cout<<"\\hline"<<std::endl;
   std::cout<<"\\end{tabular}"<<std::endl;
@@ -484,7 +490,7 @@ void AddData(RooWorkspace* w, TTree* tree) {
   tree->Draw("phPurityPHiso>>h_data",mainCut+sieieCut+TString::Format("&&njets<=3"));//nJets<=3
   RooDataHist* ReducedDataHist = new RooDataHist("DataHist","DataHist",*w->var("phPurityPHiso"), Import(*h_data) );
   w->import(*ReducedDataHist);  
-  }
+}
 
 
 
@@ -498,7 +504,6 @@ void AddSignalTemplate(RooWorkspace* w, TTree* tree) {
   w->import(*ReducedDataHist);  
   w->import(*ReducedHistPdf); 
  
-
 }
 
 void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree) {  
@@ -520,13 +525,7 @@ void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree) {
   w->import(*ReducedHistPdfRNDShape);  
   std::cout<<"========================> "<<h_sigRNDShape->Integral()<<"  "<<ReducedDataHistRNDShape->sumEntries()<<"   "<<ReducedDataHistRNDShape->numEntries()<<std::endl;
 
- 
 }
-
-void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree);
-void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree);
-void AddBkgTemplate(RooWorkspace* w, TTree* tree);
-void AddSignalMCRNDRC08(RooWorkspace* w);
 
 void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree) {  
   TH1F* h_sigRND = new TH1F("h_sigRND", "h_sigRND", nbins, minFit, maxFit );
@@ -1122,7 +1121,7 @@ RooRealVar* ModelFit(RooWorkspace* w) {
   //ctmp->SaveAs(TString::Format("plots_")+Tregion+TString::Format("_")+Twp+TString::Format("_")+Tptcut+TString::Format("_PFIsoPhoton_fit_REDUCED.pdf"));
   //ctmp->SaveAs(TString::Format("plots_")+Tregion+TString::Format("_")+Twp+TString::Format("_")+Tptcut+TString::Format("_PFIsoPhoton_fit_REDUCED.png"));
   ctmp->SetLogy(1);
-  h_dataRescaled->GetYaxis()->SetRangeUser(0.01,h_data->GetMaximum()*100);
+  h_dataRescaled->GetYaxis()->SetRangeUser(0.01,h_dataRescaled->GetMaximum()*100);
   //ctmp->SaveAs(TString::Format("plots_")+Tregion+TString::Format("_")+Twp+TString::Format("_")+Tptcut+TString::Format("_PFIsoPhoton_fit_LOG_REDUCED.pdf"));
   //ctmp->SaveAs(TString::Format("plots_")+Tregion+TString::Format("_")+Twp+TString::Format("_")+Tptcut+TString::Format("_PFIsoPhoton_fit_LOG_REDUCED.png"));
  
