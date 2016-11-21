@@ -1,5 +1,63 @@
+//ROOT header files
+#include <TROOT.h>
+#include <TAttFill.h>
+#include <TAxis.h>
+#include <TCanvas.h>
+#include <TColor.h>
+#include <TChain.h>
+#include <TF1.h>
+#include <TFile.h>
+#include <TFitResult.h>
+#include <TGraphErrors.h>
+#include <THStack.h>
+#include <TH1.h>
+#include <TH1D.h>
+#include <TKey.h>
+#include <TLatex.h>
+#include <TLegend.h>
+#include <TLorentzVector.h>
+#include <TMath.h>
+#include <TMatrixDSym.h>
+#include <TMultiGraph.h>
+#include <TPad.h>
+#include <TPaveStats.h>
+#include <TPaveText.h>
+#include <TStyle.h>
+#include <TString.h>
+#include <TVirtualFitter.h>
+
+//gSystem->AddIncludePath("-I/wherever/RooFit/is/include");
+#include <RooStats/RooStatsUtils.h>
+#include <RooStats/HLFactory.h>
+#include <RooRealVar.h>
+#include <RooArgSet.h>
+#include <RooDataHist.h>
+#include <RooFitResult.h>
+#include <RooWorkspace.h>
+#include <RooPlot.h>
+#include <RooHistPdf.h>
+#include <RooAddPdf.h>
+#include <RooAbsPdf.h>
+#include <RooRandom.h>
+
+//C or C++ header files
+#include <stdio.h>
+#include <stdlib.h>
+#include <cstdlib> //as stdlib.h
+#include <cstdio>
+#include <cmath>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <iomanip> 
+#include <algorithm>  // to use the "reverse" function to reverse the order in the array
+#include <Rtypes.h> // to use kColor
+
+using namespace std;
 using namespace RooFit;
-using namespace RooStats ;
+using namespace RooStats;
+
 //#include "./CMS_lumi.C"
 static const Int_t NCAT = 4;  
 TString mainCut;
@@ -20,6 +78,20 @@ Int_t nbins =24;//40;//80
 //Int_t nbins =40;//40;//80
 void AddData(RooWorkspace*);
 void runfits(RooWorkspace* w,std::string region, std::string phid, std::string ptcut);
+void PlotBkgTemplates(RooWorkspace* w);
+void AddSignalMCRND(RooWorkspace* w);
+void AddSignalMC(RooWorkspace* w);
+void AddBkgMC(RooWorkspace* w);
+void ReduceSignalMCRND(RooWorkspace* w, TString ptrange, TString suffix);
+void ReduceBkgMC(RooWorkspace* w, TString ptrange, TString suffix);
+void PlotSignalTemplateMCs(RooWorkspace* w);
+void PlotBkgTemplateMCs(RooWorkspace* w);
+void PlotSignalTemplates(RooWorkspace* w);
+void PlotBkgTemplates(RooWorkspace* w);
+RooRealVar* ModelFit(RooWorkspace* w);
+void PlotAllSystUnc(RooWorkspace* w,std::string region, std::string id);
+void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id);
+void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistPdf* genSig, RooHistPdf* genBkg, RooHistPdf* fitSig, RooHistPdf* fitBkg, TString Tsig, TString Tbkg);
 RooFitResult*  ModelFit(RooWorkspace*);
 
 double deltaPhi(double phi1,double phi2)
@@ -427,7 +499,7 @@ void AddSignalTemplate(RooWorkspace* w, TTree* tree) {
   w->import(*ReducedHistPdf); 
  
 
-  }
+}
 
 void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree) {  
   TH1F* h_sigRND = new TH1F("h_sigRND", "h_sigRND", nbins, minFit, maxFit );
@@ -449,7 +521,13 @@ void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree) {
   std::cout<<"========================> "<<h_sigRNDShape->Integral()<<"  "<<ReducedDataHistRNDShape->sumEntries()<<"   "<<ReducedDataHistRNDShape->numEntries()<<std::endl;
 
  
-  }
+}
+
+void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree);
+void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree);
+void AddBkgTemplate(RooWorkspace* w, TTree* tree);
+void AddSignalMCRNDRC08(RooWorkspace* w);
+
 void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree) {  
   TH1F* h_sigRND = new TH1F("h_sigRND", "h_sigRND", nbins, minFit, maxFit );
   h_sigRND->Sumw2();  
@@ -618,6 +696,7 @@ void AddSignalMC(RooWorkspace* w){
 
 }
 
+
 void AddBkgMC(RooWorkspace* w){
 
   RooArgSet* ntplVars_match = defineVariables_match();  
@@ -654,6 +733,8 @@ void AddBkgMC(RooWorkspace* w){
 
 }
 
+//====================
+
 void ReduceSignalMCRND(RooWorkspace* w, TString ptrange, TString suffix){
 
   RooDataSet* ReducedMC;  
@@ -683,7 +764,6 @@ void ReduceBkgMC(RooWorkspace* w, TString ptrange, TString suffix){
   cout << "---- nX:  " <<ReducedMCHist->sumEntries() << endl;   
   cout << endl; 
 }
-
 
 
 void PlotSignalTemplateMCs(RooWorkspace* w){
@@ -741,8 +821,6 @@ void PlotSignalTemplateMCs(RooWorkspace* w){
 
 }
 
-
-
 void PlotBkgTemplateMCs(RooWorkspace* w){
   AddBkgMC(w);
   ReduceBkgMC(w, "phPuritypt>100&&phPuritypt<=200", "_100to100");  
@@ -797,7 +875,6 @@ void PlotBkgTemplateMCs(RooWorkspace* w){
 
 
 }
-
 
 
 void PlotSignalTemplates(RooWorkspace* w){
@@ -870,6 +947,7 @@ void PlotSignalTemplates(RooWorkspace* w){
 }
 
 
+
 void PlotBkgTemplates(RooWorkspace* w){
   TChain* Tree  = new TChain(); 
   //  Tree->Add("SinglePhoton_data_20062016.root/tree/tree");////
@@ -926,6 +1004,7 @@ void PlotBkgTemplates(RooWorkspace* w){
   ctmp->SaveAs(TString::Format("plots_")+Tregion+TString::Format("_")+Twp+TString::Format("/PFIsoPhoton_BackgroundShape_LOG_DATAMC.png"));
 
 }
+
 
 
 RooRealVar* ModelFit(RooWorkspace* w) {
@@ -1294,14 +1373,17 @@ void PlotAllSystUnc(RooWorkspace* w,std::string region, std::string id){ //
   w->import(*puritySyst); 
 
 }
+
+
+
 void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id){
   AddBkgMC(w);
-  std::cout<<"flag"<<stsd::endl;
+  std::cout<<"flag"<<std::endl;
   AddSignalMC(w);
   AddSignalMCRND(w);
-  std::cout<<"flag"<<stsd::endl;
+  std::cout<<"flag"<<std::endl;
   
-  std::cout<<"flag"<<stsd::endl;
+  std::cout<<"flag"<<std::endl;
   RooHistPdf* MCPdfRND =(RooHistPdf*) *w->pdf("SignalMCHistPdfRNDShape");
   RooHistPdf* MCPdfmatch =(RooHistPdf*) *w->pdf("SignalMCHistPdfmatch");
   RooHistPdf* MCPdfNOmatch =(RooHistPdf*) *w->pdf("BkgMCHistPdfNOmatch");
@@ -1321,7 +1403,6 @@ void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id){
   ComputeSystUnc(w,  region,  id,MCPdfmatch,MCPdfNOmatch, MCPdfRND,MCPdfNOsieie, Tsig4, Tbkg4);
   
 }
-
 
 
 void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistPdf* genSig, RooHistPdf* genBkg, RooHistPdf* fitSig, RooHistPdf* fitBkg, TString Tsig, TString Tbkg){
@@ -1422,11 +1503,11 @@ void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistP
   }
  
   TFile* fout =  new TFile(TString::Format("fout_")+Tregion+TString::Format("_")+Twp+TString::Format("_")+Tptcut+TString::Format("_")+Tsig+TString::Format("_")+Tbkg+TString::Format(".root"), "RECREATE");
-  TCanvas* ctmp = new TCanvas("ctmp","Signal Shape",1);
-  ctmp->cd();
+  TCanvas* ctmp2 = new TCanvas("ctmp2","Signal Shape",1);
+  ctmp2->cd();
   h_purity->Draw();
   fout->cd();
-  ctmp->Write();
+  ctmp2->Write();
  
   fout->Close();
 
