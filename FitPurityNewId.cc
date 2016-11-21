@@ -738,7 +738,7 @@ void AddBkgMC(RooWorkspace* w){
 void ReduceSignalMCRND(RooWorkspace* w, TString ptrange, TString suffix){
 
   RooDataSet* ReducedMC;  
-  ReducedMC = (RooDataSet*) *w->data("SignalMCHistRNDShapeForPlot")->reduce(*w->var("phPurityRNDPHiso"),ptrange);//// 
+  ReducedMC = (RooDataSet*) w->data("SignalMCHistRNDShapeForPlot")->reduce(*w->var("phPurityRNDPHiso"),ptrange);//// 
   RooDataHist* ReducedMCHist = (RooDataHist*)ReducedMC->binnedClone(TString::Format("SignalMCHist")+suffix,TString::Format("SignalMCHist")+suffix);
   RooHistPdf* ReducedHistPdf = new RooHistPdf(TString::Format("SignalMCHistPdf")+suffix,TString::Format("SignalMCHistPdf")+suffix,RooArgList(*w->var("phPurityPHiso"),*w->var("phPuritypt")),*ReducedMCHist);
   w->import(*ReducedMCHist);  
@@ -753,7 +753,7 @@ void ReduceSignalMCRND(RooWorkspace* w, TString ptrange, TString suffix){
 void ReduceBkgMC(RooWorkspace* w, TString ptrange, TString suffix){
 
   RooDataSet* ReducedMC;  
-  ReducedMC = (RooDataSet*) *w->data("SignalMCHistRNDShape")->reduce(*w->var("phPurityRNDPHiso"),ptrange);//// 
+  ReducedMC = (RooDataSet*) w->data("SignalMCHistRNDShape")->reduce(*w->var("phPurityRNDPHiso"),ptrange);//// 
   RooDataHist* ReducedMCHist = (RooDataHist*)ReducedMC->binnedClone(TString::Format("BkgMCHist")+suffix,TString::Format("BkgMCHist")+suffix);
   RooHistPdf* ReducedHistPdf = new RooHistPdf(TString::Format("BkgMCHistPdf")+suffix,TString::Format("BkgMCHistPdf")+suffix,*w->var("phPurityRND04PHiso"),*ReducedMCHist);
   w->import(*ReducedMCHist);  
@@ -773,9 +773,9 @@ void PlotSignalTemplateMCs(RooWorkspace* w){
   ReduceSignalMCRND(w, "phPuritypt>250", "_250toInf");  
  
 
-  RooHistPdf* MC100to300 =(RooHistPdf*) *w->pdf("SignalMCHistPdf_100to200");
-  RooHistPdf* MC300to600 =(RooHistPdf*) *w->pdf("SignalMCHistPdf_200to250");
-  RooHistPdf* MC600toInf =(RooHistPdf*) *w->pdf("SignalMCHistPdf_250toInf");
+  RooHistPdf* MC100to300 =(RooHistPdf*) w->pdf("SignalMCHistPdf_100to200");
+  RooHistPdf* MC300to600 =(RooHistPdf*) w->pdf("SignalMCHistPdf_200to250");
+  RooHistPdf* MC600toInf =(RooHistPdf*) w->pdf("SignalMCHistPdf_250toInf");
  
 
   TCanvas* ctmp = new TCanvas("ctmp","PH Iso Signal Shape",1);
@@ -828,9 +828,9 @@ void PlotBkgTemplateMCs(RooWorkspace* w){
   ReduceBkgMC(w, "phPuritypt>250", "_250toInf");  
  
 
-  RooHistPdf* MC100to300 =(RooHistPdf*) *w->pdf("BkgMCHistPdf_100to200");
-  RooHistPdf* MC300to600 =(RooHistPdf*) *w->pdf("BkgMCHistPdf_200to250");
-  RooHistPdf* MC600toInf =(RooHistPdf*) *w->pdf("BkgMCHistPdf_250toInf");
+  RooHistPdf* MC100to300 =(RooHistPdf*) w->pdf("BkgMCHistPdf_100to200");
+  RooHistPdf* MC300to600 =(RooHistPdf*) w->pdf("BkgMCHistPdf_200to250");
+  RooHistPdf* MC600toInf =(RooHistPdf*) w->pdf("BkgMCHistPdf_250toInf");
  
 
   TCanvas* ctmp = new TCanvas("ctmp","PH Iso Signal Shape",1);
@@ -898,12 +898,12 @@ void PlotSignalTemplates(RooWorkspace* w){
   // AddSignalMCRNDRC04(w);
   AddSignalMC(w);
 
-  //RooHistPdf* DataPdf =(RooHistPdf*) *w->pdf("SignalDataHistPdf");
-  RooHistPdf* DataPdfRND =(RooHistPdf*) *w->pdf("SignalDataHistPdfRNDShape");
-  RooHistPdf* MCPdfRND =(RooHistPdf*) *w->pdf("SignalMCHistPdfRNDShape");
-  RooHistPdf* MCPdfRNDRC08 =(RooHistPdf*) *w->pdf("SignalMCHistPdfRNDShapeRC08");
-  // RooHistPdf* MCPdfRNDRC04 =(RooHistPdf*) *w->pdf("SignalMCHistPdfRNDShapeRC04");
-  RooHistPdf* MCPdfmatch =(RooHistPdf*) *w->pdf("SignalMCHistPdfmatch");
+  //RooHistPdf* DataPdf =(RooHistPdf*) w->pdf("SignalDataHistPdf");
+  RooHistPdf* DataPdfRND =(RooHistPdf*) w->pdf("SignalDataHistPdfRNDShape");
+  RooHistPdf* MCPdfRND =(RooHistPdf*) w->pdf("SignalMCHistPdfRNDShape");
+  RooHistPdf* MCPdfRNDRC08 =(RooHistPdf*) w->pdf("SignalMCHistPdfRNDShapeRC08");
+  // RooHistPdf* MCPdfRNDRC04 =(RooHistPdf*) w->pdf("SignalMCHistPdfRNDShapeRC04");
+  RooHistPdf* MCPdfmatch =(RooHistPdf*) w->pdf("SignalMCHistPdfmatch");
 
   TCanvas* ctmp = new TCanvas("ctmp","Signal Shape",1);
   RooPlot* plot;
@@ -961,9 +961,9 @@ void PlotBkgTemplates(RooWorkspace* w){
   Tree->SetName("Tree");
   AddBkgTemplate(w, Tree);
   AddBkgMC(w);
-  RooHistPdf* DataPdf =(RooHistPdf*) *w->pdf("BkgDataHistPdf");
-  RooHistPdf* MCPdfNOmatch =(RooHistPdf*) *w->pdf("BkgMCHistPdfNOmatch");
-  RooHistPdf* MCPdfNOsieie =(RooHistPdf*) *w->pdf("BkgMCHistPdfNOsieie");
+  RooHistPdf* DataPdf =(RooHistPdf*) w->pdf("BkgDataHistPdf");
+  RooHistPdf* MCPdfNOmatch =(RooHistPdf*) w->pdf("BkgMCHistPdfNOmatch");
+  RooHistPdf* MCPdfNOsieie =(RooHistPdf*) w->pdf("BkgMCHistPdfNOsieie");
 
   TCanvas* ctmp = new TCanvas("ctmp","Signal Shape",1);
   RooPlot* plot;
@@ -1043,8 +1043,8 @@ RooRealVar* ModelFit(RooWorkspace* w) {
   RooRealVar sigYield("sigYield","sigYield",0.99*data->sumEntries(),0., data->sumEntries());
   RooRealVar* frac = new RooRealVar("frac","frac",initFrac,0.8, 1.);
 
-  RooHistPdf* fitFuncSig =(RooHistPdf*) *w->pdf("SignalDataHistPdfRNDShape");
-  RooHistPdf* fitFuncBkg =(RooHistPdf*) *w->pdf("BkgDataHistPdf");
+  RooHistPdf* fitFuncSig =(RooHistPdf*) w->pdf("SignalDataHistPdfRNDShape");
+  RooHistPdf* fitFuncBkg =(RooHistPdf*) w->pdf("BkgDataHistPdf");
   RooAddPdf* fitFunc = new RooAddPdf("fitFunc","fitFunc",*fitFuncSig,*fitFuncBkg,*frac);
   fitresult = fitFunc->fitTo(*data, Range(minFit,maxFit),RooFit::FitOptions("MHTER"), SumW2Error(kTRUE), Save(kTRUE));   //
 
@@ -1384,10 +1384,10 @@ void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id){
   std::cout<<"flag"<<std::endl;
   
   std::cout<<"flag"<<std::endl;
-  RooHistPdf* MCPdfRND =(RooHistPdf*) *w->pdf("SignalMCHistPdfRNDShape");
-  RooHistPdf* MCPdfmatch =(RooHistPdf*) *w->pdf("SignalMCHistPdfmatch");
-  RooHistPdf* MCPdfNOmatch =(RooHistPdf*) *w->pdf("BkgMCHistPdfNOmatch");
-  RooHistPdf* MCPdfNOsieie =(RooHistPdf*) *w->pdf("BkgMCHistPdfNOsieie");
+  RooHistPdf* MCPdfRND =(RooHistPdf*) w->pdf("SignalMCHistPdfRNDShape");
+  RooHistPdf* MCPdfmatch =(RooHistPdf*) w->pdf("SignalMCHistPdfmatch");
+  RooHistPdf* MCPdfNOmatch =(RooHistPdf*) w->pdf("BkgMCHistPdfNOmatch");
+  RooHistPdf* MCPdfNOsieie =(RooHistPdf*) w->pdf("BkgMCHistPdfNOsieie");
 
   TString Tsig1="MCPdfRND";
   TString Tbkg1="MCPdfNOmatch";
