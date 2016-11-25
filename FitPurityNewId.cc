@@ -117,20 +117,24 @@ void runAllfits(std::string phid){
   HLFactory hlfptcut1("HLFactoryptcut1", card_name, false);
   HLFactory hlfptcut2("HLFactoryptcut2", card_name, false);
   HLFactory hlfptcut3("HLFactoryptcut3", card_name, false);
-  //HLFactory hlfptcut4("HLFactoryptcut4", card_name, false);
+  HLFactory hlfptcut4("HLFactoryptcut4", card_name, false);
+  HLFactory hlfptcut5("HLFactoryptcut5", card_name, false);
   RooWorkspace* wptcut1 = hlfptcut1.GetWs(); 
   RooWorkspace* wptcut2 = hlfptcut2.GetWs(); 
   RooWorkspace* wptcut3 = hlfptcut3.GetWs(); 
-  //RooWorkspace* wptcut4 = hlfptcut4.GetWs(); 
+  RooWorkspace* wptcut4 = hlfptcut4.GetWs(); 
+  RooWorkspace* wptcut5 = hlfptcut5.GetWs(); 
 
   HLFactory hlfEBNEWptcut1("HLFactoryEBNEWptcut1", card_name, false);
   HLFactory hlfEBNEWptcut2("HLFactoryEBNEWptcut2", card_name, false);
   HLFactory hlfEBNEWptcut3("HLFactoryEBNEWptcut3", card_name, false);
   HLFactory hlfEBNEWptcut4("HLFactoryEBNEWptcut4", card_name, false);
+  HLFactory hlfEBNEWptcut5("HLFactoryEBNEWptcut5", card_name, false);
   RooWorkspace* wEBNEWptcut1 = hlfEBNEWptcut1.GetWs(); 
   RooWorkspace* wEBNEWptcut2 = hlfEBNEWptcut2.GetWs(); 
   RooWorkspace* wEBNEWptcut3 = hlfEBNEWptcut3.GetWs(); 
-  //RooWorkspace* wEBNEWptcut4 = hlfEBNEWptcut4.GetWs(); 
+  RooWorkspace* wEBNEWptcut4 = hlfEBNEWptcut4.GetWs(); 
+  RooWorkspace* wEBNEWptcut5 = hlfEBNEWptcut5.GetWs(); 
 
 
    //Add Variables
@@ -147,13 +151,14 @@ void runAllfits(std::string phid){
   wptcut1->import(*ntplVars);
   wptcut2->import(*ntplVars);
   wptcut3->import(*ntplVars);
-  //wptcut4->import(*ntplVars);
+  wptcut4->import(*ntplVars);
+  wptcut5->import(*ntplVars);
   
   wEBNEWptcut1->import(*ntplVars);
   wEBNEWptcut2->import(*ntplVars);
   wEBNEWptcut3->import(*ntplVars);
-  //wEBNEWptcut4->import(*ntplVars);
-
+  wEBNEWptcut4->import(*ntplVars);
+  wEBNEWptcut5->import(*ntplVars);
 
   //EB medium
   runfits(wptcut1,"EB",phid,"ptcut1");
@@ -168,22 +173,28 @@ void runAllfits(std::string phid){
   RooRealVar* purityptcut3 = wptcut3->var(("purityEB"+phid+"ptcut3").c_str());
   RooRealVar* puritySystptcut3 = wptcut3->var(("puritySystEB"+phid+"ptcut3").c_str());
  
-  //runfits(wptcut4,"EB",phid,"ptcut4");
-  //RooRealVar* purityptcut4 = wptcut4->var(("purityEB"+phid+"ptcut4").c_str());
-  //RooRealVar* puritySystptcut4 = wptcut4->var(("puritySystEB"+phid+"ptcut4").c_str());
- 
+  runfits(wptcut4,"EB",phid,"ptcut4");
+  RooRealVar* purityptcut4 = wptcut4->var(("purityEB"+phid+"ptcut4").c_str());
+  RooRealVar* puritySystptcut4 = wptcut4->var(("puritySystEB"+phid+"ptcut4").c_str());
+
+  runfits(wptcut5,"EB",phid,"ptcut5");
+  RooRealVar* purityptcut5 = wptcut5->var(("purityEB"+phid+"ptcut5").c_str());
+  RooRealVar* puritySystptcut5 = wptcut5->var(("puritySystEB"+phid+"ptcut5").c_str());
+
   //print summary table MEDIUM
   std::cout<<"\\begin{table}[tb]"<<std::endl;
   std::cout<<"\\begin{tabular}{||c|c||}"<<std::endl;
-  std::cout<<"$\\p_T$ -- region \& Purity  \\\\"<<std::endl;
+  std::cout<<"$\\p_T$ -- region & Purity  \\\\"<<std::endl;
   std::cout<<"\\hline"<<std::endl;
-  // std::cout<<" 175-250 GeV \& "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<"0.0285(syst)    \\\\"<<std::endl;  
-  //std::cout<<" 250-300 GeV \& "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<"0.0217(syst)   \\\\"<<std::endl;   
-  //std::cout<<" 300-Inf GeV \& "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
-  //std::cout<<" 350-Inf GeV \& "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
-  std::cout<<" 175-250 GeV \& "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut1->format(3, "EXP") <<" (syst)    \\\\"<<std::endl;  
-  std::cout<<" 250-300 GeV \& "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut2->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
-  std::cout<<" 300-Inf GeV \& "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut3->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  // std::cout<<" 175-250 GeV & "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<"0.0285(syst)    \\\\"<<std::endl;  
+  //std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<"0.0217(syst)   \\\\"<<std::endl;   
+  //std::cout<<" 300-Inf GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
+  //std::cout<<" 350-Inf GeV & "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
+  std::cout<<" 175-250 GeV & "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut1->format(3, "EXP") <<" (syst)    \\\\"<<std::endl;  
+  std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut2->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 300-400 GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut3->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 400-600 GeV & "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut4->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 600-Inf GeV & "<<*purityptcut5->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut5->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
  
   std::cout<<"\\hline"<<std::endl;
   std::cout<<"\\end{tabular}"<<std::endl;
@@ -193,12 +204,12 @@ void runAllfits(std::string phid){
   TCanvas* c = new TCanvas("c","c",1);
 
 
-  double x[3] = {225,275, 650};
-  double x_err[3] = {25., 25, 350};//10., 10., 10., 20, 30, 335
-  double y[3] ={purityptcut1->getVal(),purityptcut2->getVal(),purityptcut3->getVal()};
-  double y_err[3] = {purityptcut1->getError(),purityptcut2->getError(),purityptcut3->getError()};
-  //double y_errSyst[3] = {0.0286,0.021,0.0156};
-  double y_errSyst[3] = {puritySystptcut1->getVal(),puritySystptcut2->getVal(),puritySystptcut3->getVal()};
+  double x[5] = {225,275, 350, 500, 800};  // center of bin (Inf is 1000)
+  double x_err[5] = {25., 25, 50, 100, 200};//10., 10., 10., 20, 30, 335  // value so that the +,- error band covers the whole bin
+  double y[5] ={purityptcut1->getVal(),purityptcut2->getVal(),purityptcut3->getVal(), purityptcut4->getVal(),purityptcut5->getVal()};
+  double y_err[5] = {purityptcut1->getError(),purityptcut2->getError(),purityptcut3->getError(), purityptcut4->getError(),purityptcut5->getError()};
+  //double y_errSyst[5] = {0.0286,0.021,0.0156};
+  double y_errSyst[5] = {puritySystptcut1->getVal(),puritySystptcut2->getVal(),puritySystptcut3->getVal(), puritySystptcut4->getVal(),puritySystptcut5->getVal()};
  
  
   //double x[4] = {225,275, 325.,675};
@@ -207,10 +218,8 @@ void runAllfits(std::string phid){
   //double y_err[4] = {purityptcut1->getError(),purityptcut2->getError(),purityptcut3->getError(),purityptcut4->getError()};
   //double y_errSyst[4] = {0.0286,0.021,0.0156,0.0156};
  
-  TGraphErrors* EB = new TGraphErrors(4, x, y, x_err, y_err);
-  TGraphErrors* EBSyst = new TGraphErrors(4, x, y, x_err, y_errSyst);
- 
-
+  TGraphErrors* EB = new TGraphErrors(5, x, y, x_err, y_err);
+  TGraphErrors* EBSyst = new TGraphErrors(5, x, y, x_err, y_errSyst);
   EB->SetMarkerColor(kAzure+7);
   EB->SetLineColor(kAzure+7);
   EBSyst->SetMarkerColor(kAzure+7);
@@ -322,12 +331,12 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
   Tptcut = ptcut;
   if(ptcut=="ptcut1") ptCut = "&&phPuritypt<250";
   if(ptcut=="ptcut2") ptCut = "&&phPuritypt>250&&phPuritypt<300";
-  if(ptcut=="ptcut3") ptCut = "&&phPuritypt>=300";
-  //if(ptcut=="ptcut3") ptCut = "&&phPuritypt>=300&&phPuritypt<=350";
-  //if(ptcut=="ptcut4") ptCut = "&&phPuritypt>250&&phPuritypt<=270";
-  if(ptcut=="ptcut4") ptCut = "&&phPuritypt>350";
-  if(ptcut=="ptcut5") ptCut = "&&phPuritypt>270&&phPuritypt<=1000";
+  if(ptcut=="ptcut3") ptCut = "&&phPuritypt>=300&&phPuritypt<400";
+  if(ptcut=="ptcut4") ptCut = "&&phPuritypt>400&&phPuritypt<600";
+  if(ptcut=="ptcut5") ptCut = "&&phPuritypt>600&&phPuritypt<=1000";
   if(ptcut=="ptcut6") ptCut = "&&phPuritypt>200";
+
+
   if(region=="EB"){
     Tregion="EB";
      
