@@ -26,6 +26,8 @@
 #include <TString.h>
 #include <TVirtualFitter.h>
 
+#include <RooStats/RooStatsUtils.h>
+#include <RooStats/HLFactory.h>
 #include <RooRealVar.h>
 #include <RooArgSet.h>
 #include <RooDataHist.h>
@@ -34,6 +36,9 @@
 #include <RooPlot.h>
 #include <RooHistPdf.h>
 #include <RooAddPdf.h>
+#include <RooAbsPdf.h>
+#include <RooRandom.h>
+
 
 //C or C++ header files                                                                                                         
 #include <stdio.h>
@@ -49,8 +54,11 @@
 #include <algorithm>  // to use the "reverse" function to reverse the order in the array                          
 #include <Rtypes.h> // to use kColor                                                                             
 
-#include "FitPurityNewId.cc"
+#include "FitPurityNewId.h"
 using namespace std;
+using namespace RooFit;
+using namespace RooStats;
+
 //
 
 void MakeFitPurity(string phid){ 

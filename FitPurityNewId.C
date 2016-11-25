@@ -1,3 +1,4 @@
+#include "FitPurityNewId.h"
 //ROOT header files
 #include <TROOT.h>
 #include <TAttFill.h>
@@ -54,11 +55,12 @@
 #include <algorithm>  // to use the "reverse" function to reverse the order in the array
 #include <Rtypes.h> // to use kColor
 
+#include "CMS_lumi.h"
+
 using namespace std;
 using namespace RooFit;
 using namespace RooStats;
 
-//#include "./CMS_lumi.C"
 static const Int_t NCAT = 4;  
 TString mainCut;
 TString mainCutQCD;
@@ -76,29 +78,6 @@ Float_t maxFit = 12;
 //Int_t nbins =30;//40;//80
 Int_t nbins =24;//40;//80
 //Int_t nbins =40;//40;//80
-
-void AddData(RooWorkspace*, TTree*);
-void runfits(RooWorkspace* w,std::string region, std::string phid, std::string ptcut);
-void PlotBkgTemplates(RooWorkspace* w);
-void AddSignalMCRND(RooWorkspace* w);
-void AddSignalMC(RooWorkspace* w);
-void AddBkgMC(RooWorkspace* w);
-void ReduceSignalMCRND(RooWorkspace* w, TString ptrange, TString suffix);
-void ReduceBkgMC(RooWorkspace* w, TString ptrange, TString suffix);
-void PlotSignalTemplateMCs(RooWorkspace* w);
-void PlotBkgTemplateMCs(RooWorkspace* w);
-void PlotSignalTemplates(RooWorkspace* w);
-void PlotBkgTemplates(RooWorkspace* w);
-RooRealVar* ModelFit(RooWorkspace* w);
-void PlotAllSystUnc(RooWorkspace* w,std::string region, std::string id);
-void ComputeAllSystUnc(RooWorkspace* w, std::string region, std::string id);
-void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistPdf* genSig, RooHistPdf* genBkg, RooHistPdf* fitSig, RooHistPdf* fitBkg, TString Tsig, TString Tbkg);
-//RooFitResult*  ModelFit(RooWorkspace*);
-void AddSignalTemplateRND04(RooWorkspace* w, TTree* tree);
-void AddSignalTemplateRND08(RooWorkspace* w, TTree* tree);
-void AddBkgTemplate(RooWorkspace* w, TTree* tree);
-void AddSignalMCRNDRC08(RooWorkspace* w);
-
 
 double deltaPhi(double phi1,double phi2)
 {
@@ -373,7 +352,7 @@ void runfitsPlot(std::string region, std::string phid) {
     }else if(phid=="MEDIUM50ns"){
       Twp = "MEDIUM50ns";
       mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.31&&phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
       sieieCut="&&phPuritysieie<0.010";
       sieieCutSideBand="&&phPuritysieie>0.010&&phPuritysieie<0.014";
       PHIsoAbsCut= 1.33;   
@@ -449,7 +428,7 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
     }else if(phid=="MEDIUM50ns"){
       Twp = "MEDIUM50ns";
       mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity==1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity==1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity==1&&phPuritypt>175&&phPurityCHiso<1.31&&phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
       sieieCut="&&phPuritysieie<0.010";
       sieieCutSideBand="&&phPuritysieie>0.010&&phPuritysieie<0.014";
       PHIsoAbsCut= 1.33;   
@@ -1528,3 +1507,4 @@ void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistP
   fout->Close();
 
 }
+
