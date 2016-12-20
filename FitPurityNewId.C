@@ -112,8 +112,6 @@ RooArgSet* defineVariables() {
   RooRealVar* signaljetpt = new RooRealVar("signaljetpt","signaljetpt",0,2000.,"");
   RooRealVar* signaljeteta = new RooRealVar("signaljeteta","signaljeteta",-5.,5.,"");
   RooRealVar* njets = new RooRealVar("njets","njets",0,20,"");
-  /* RooRealVar* nvtx = new RooRealVar("nvtx", "nvtx", 0, 50, "");
-  */
   RooRealVar* wzid   = new RooRealVar("wzid", "wzid", 0, 1000, "");
 
   RooArgSet* ntplVars = new RooArgSet(*nphotons, *hltphoton165, *hltphoton175, *ph_elveto_sig_livia, *rho, *ph_EA_sig_livia);
@@ -137,7 +135,7 @@ RooArgSet* defineVariables_match() {
   RooRealVar* ph_rndiso08_sig_livia  = new RooRealVar("phPurityRND08PHiso", "RNDPFIsophoton",minFit,maxFit,"GeV");//RND PH iso
   RooRealVar* ph_EA_sig_livia  = new RooRealVar("phPurityEA", "EAs",0,10,"GeV");//RND PH iso
   RooRealVar* rho  = new RooRealVar("rho", "rho",0, 100,"GeV");//RND PH iso
- RooRealVar* ph_chiso_sig_livia  = new RooRealVar("phPurityCHiso", "PFCHIsophoton",minFit,maxFit,"GeV");
+  RooRealVar* ph_chiso_sig_livia  = new RooRealVar("phPurityCHiso", "PFCHIsophoton",minFit,maxFit,"GeV");
   RooRealVar* ph_nhiso_sig_livia  = new RooRealVar("phPurityNHiso", "PFNHIsophoton",minFit,maxFit,"GeV");
   RooRealVar* ph_hoe_sig_livia  = new RooRealVar("phPurityhoe", "HoEphoton",minFit,maxFit,"GeV");
 
@@ -196,13 +194,13 @@ void runAllfits(std::string phid){
 
    //Add Variables
   RooArgSet* ntplVars = defineVariables();  
-  TChain* Tree  = new TChain(); 
-  //Tree->Add("../rootfiles/Single_Photon_Run2B_50ns_0825_Loose_LooseRC_0000.root/tree/tree");////
-  //Tree->Add("../rootfiles/Single_Photon_Run2D_25ns_2301_0000.root/tree/tree");////
-  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root/tree/tree");////
-  Tree->Add("datatree.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //Tree->Add("../rootfiles/Single_Photon_Run2B_50ns_0825_Loose_LooseRC_0000.root");////
+  //Tree->Add("../rootfiles/Single_Photon_Run2D_25ns_2301_0000.root");////
+  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root");////
+  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root");////
+  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root");////
+  Tree->Add("datatree.root");////
   Tree->SetTitle("Tree");
   Tree->SetName("Tree");
   wptcut1->import(*ntplVars);
@@ -222,6 +220,8 @@ void runAllfits(std::string phid){
   runfits(wptcut1,"EB",phid,"ptcut1");
   RooRealVar* purityptcut1 = wptcut1->var(("purityEB"+phid+"ptcut1").c_str());
   RooRealVar* puritySystptcut1 = wptcut1->var(("puritySystEB"+phid+"ptcut1").c_str());
+
+  exit(0);
     
   runfits(wptcut2,"EB",phid,"ptcut2");
   RooRealVar* purityptcut2 = wptcut2->var(("purityEB"+phid+"ptcut2").c_str());
@@ -254,11 +254,11 @@ void runAllfits(std::string phid){
   //std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<"0.0217(syst)   \\\\"<<std::endl;   
   //std::cout<<" 300-Inf GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
   //std::cout<<" 350-Inf GeV & "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<"0.0156(syst)   \\\\"<<std::endl;   
-  std::cout<<" 175-250 GeV & "<<*purityptcut1->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut1->format(3, "EXP") <<" (syst)    \\\\"<<std::endl;  
-  std::cout<<" 250-300 GeV & "<<*purityptcut2->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut2->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
-  std::cout<<" 300-400 GeV & "<<*purityptcut3->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut3->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
-  std::cout<<" 400-600 GeV & "<<*purityptcut4->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut4->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
-  std::cout<<" 600-Inf GeV & "<<*purityptcut5->format(2, "EXP") <<"(stat) \\pm "<<*puritySystptcut5->format(3, "EXP") <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 175-250 GeV & "<<*(purityptcut1->format(2, "EXP")) <<"(stat) \\pm "<<*(puritySystptcut1->format(3, "EXP")) <<" (syst)    \\\\"<<std::endl;  
+  std::cout<<" 250-300 GeV & "<<*(purityptcut2->format(2, "EXP")) <<"(stat) \\pm "<<*(puritySystptcut2->format(3, "EXP")) <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 300-400 GeV & "<<*(purityptcut3->format(2, "EXP")) <<"(stat) \\pm "<<*(puritySystptcut3->format(3, "EXP")) <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 400-600 GeV & "<<*(purityptcut4->format(2, "EXP")) <<"(stat) \\pm "<<*(puritySystptcut4->format(3, "EXP")) <<" (syst)   \\\\"<<std::endl;   
+  std::cout<<" 600-Inf GeV & "<<*(purityptcut5->format(2, "EXP")) <<"(stat) \\pm "<<*(puritySystptcut5->format(3, "EXP")) <<" (syst)   \\\\"<<std::endl;   
  
   std::cout<<"\\hline"<<std::endl;
   std::cout<<"\\end{tabular}"<<std::endl;
@@ -329,20 +329,20 @@ void runfitsPlot(std::string region, std::string phid) {
      
     if(phid=="NEW"){
       Twp = "NEW";
-      mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)>0.&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<5.";//abs(phPurityeta)<1.4442&&
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)>0.&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<5.";
-      sieieCut="&&phPuritysieie<0.0105";
-      sieieCutSideBand="&&phPuritysieie>0.0105&&phPuritysieie<0.014";
+      mainCut="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)>0. && abs(phPurityeta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<5.";//abs(phPurityeta)<1.4442 && 
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)>0. && abs(phPurityeta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<5.";
+      sieieCut=" && phPuritysieie<0.0105";
+      sieieCutSideBand=" && phPuritysieie>0.0105 && phPuritysieie<0.014";
       PHIsoAbsCut= 2.75; 
       PHIsoRelCut = "0.0045";  
       RescaledVar =TString::Format("(2.5-rho*phPurityEA+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
       RescaledRNDVar =TString::Format("(2.5-rho*phPurityEA+phPurityRND04PHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
     }else if(phid=="MEDIUM"){
       Twp = "MEDIUM";
-      mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(pPurityheta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.37 && phPurityNHiso< (1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt)";
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(pPurityheta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.37 && phPurityNHiso<(1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt )";
-      sieieCut="&&phPuritysieie<0.0102";
-      sieieCutSideBand="&&phPuritysieie>0.0102&&phPuritysieie<0.014";
+      mainCut="(hltphoton165 > 0 || hltphoton175 > 0) && abs(pPurityheta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.37  &&  phPurityNHiso< (1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt)";
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0) && abs(pPurityheta)<1.4442 && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.37  &&  phPurityNHiso<(1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt )";
+      sieieCut=" && phPuritysieie<0.0102";
+      sieieCutSideBand=" && phPuritysieie>0.0102 && phPuritysieie<0.014";
       PHIsoAbsCut= 0.28;   
       PHIsoRelCut = "0.0053"; 
       RescaledVar =TString::Format("(-rho*phPurityEAEGamma+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
@@ -351,10 +351,10 @@ void runfitsPlot(std::string region, std::string phid) {
       //RescaledRNDVar =TString::Format("(-rho*phPurityEAEGamma+phPurityRND04PHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
     }else if(phid=="MEDIUM50ns"){
       Twp = "MEDIUM50ns";
-      mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.31&&phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
-      sieieCut="&&phPuritysieie<0.010";
-      sieieCutSideBand="&&phPuritysieie>0.010&&phPuritysieie<0.014";
+      mainCut="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.31  &&  phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)<1.4442 && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.31 && phPurityNHiso< 0.6+exp(0.0044*phPuritypt+0.5809)";
+      sieieCut=" && phPuritysieie<0.010";
+      sieieCutSideBand=" && phPuritysieie>0.010 && phPuritysieie<0.014";
       PHIsoAbsCut= 1.33;   
       PHIsoRelCut = "0.0043"; 
       RescaledVar =TString::Format("(-rho*phPurityEAEGamma+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
@@ -395,42 +395,42 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
   TString sieieCutSideBand;
   TString ptCut;
   Tptcut = ptcut;
-  if(ptcut=="ptcut1") ptCut = "&&phPuritypt<250";
-  if(ptcut=="ptcut2") ptCut = "&&phPuritypt>250&&phPuritypt<300";
-  if(ptcut=="ptcut3") ptCut = "&&phPuritypt>=300&&phPuritypt<400";
-  if(ptcut=="ptcut4") ptCut = "&&phPuritypt>400&&phPuritypt<600";
-  if(ptcut=="ptcut5") ptCut = "&&phPuritypt>600&&phPuritypt<=1000";
-  if(ptcut=="ptcut6") ptCut = "&&phPuritypt>200";
+  if(ptcut=="ptcut1") ptCut = "  &&  phPuritypt<250";
+  if(ptcut=="ptcut2") ptCut = "  &&  phPuritypt>250  &&  phPuritypt<300";
+  if(ptcut=="ptcut3") ptCut = "  &&  phPuritypt>=300  &&  phPuritypt<400";
+  if(ptcut=="ptcut4") ptCut = "  &&  phPuritypt>400  &&  phPuritypt<600";
+  if(ptcut=="ptcut5") ptCut = "  &&  phPuritypt>600  &&  phPuritypt<=1000";
+  if(ptcut=="ptcut6") ptCut = "  &&  phPuritypt>200";
 
   if(region=="EB"){
     Tregion="EB";
      
     if(phid=="NEW"){
       Twp = "NEW";
-      mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)>0.&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<5.";//abs(phPurityeta)<1.4442&&
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)>0.&&abs(phPurityeta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<5.";
-      sieieCut="&&phPuritysieie<0.0105";
-      sieieCutSideBand="&&phPuritysieie>0.0105&&phPuritysieie<0.014";
+      mainCut="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)>0. && abs(phPurityeta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<5.";//abs(phPurityeta)<1.4442 && 
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)>0. && abs(phPurityeta)<1.4442 && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<5.";
+      sieieCut=" && phPuritysieie<0.0105";
+      sieieCutSideBand=" && phPuritysieie>0.0105 && phPuritysieie<0.014";
       PHIsoAbsCut= 2.75; 
       PHIsoRelCut = "0.0045";  
       RescaledVar =TString::Format("(2.5-rho*phPurityEA+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
       RescaledRNDVar =TString::Format("(2.5-rho*phPurityEA+phPurityRND04PHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
     }else if(phid=="MEDIUM"){
       Twp = "MEDIUM";
-      mainCut="combinejetpt[0]>100&&abs(combinejeteta[0])<2.5&&(hltphoton165 > 0 || hltphoton175 > 0)&&abs(pPurityheta)<1.4442&&phPurityElectronVeto&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.37 && phPurityNHiso< (1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt)";
-      mainCutQCD="combinejetpt[0]>100&&abs(combinejeteta[0])<2.5&&(hltphoton165 > 0 || hltphoton175 > 0)&&abs(pPurityheta)<1.4442&&nphotonsPurity>=1&&phPuritypt>175&&phPurityCHiso<1.37 && phPurityNHiso<(1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt )";
-      sieieCut="&&phPuritysieie<0.0102";
-      sieieCutSideBand="&&phPuritysieie>0.0102&&phPuritysieie<0.014";
+      mainCut="combinejetpt[0]>100 && abs(combinejeteta[0])<2.5 && (hltphoton165 > 0 || hltphoton175 > 0) && abs(pPurityheta)<1.4442 && phPurityElectronVeto && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.37  &&  phPurityNHiso< (1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt)";
+      mainCutQCD="combinejetpt[0]>100 && abs(combinejeteta[0])<2.5 && (hltphoton165 > 0 || hltphoton175 > 0) && abs(pPurityheta)<1.4442 && nphotonsPurity>=1 && phPuritypt>175 && phPurityCHiso<1.37  &&  phPurityNHiso<(1.06+0.014*phPuritypt + 0.000019*phPuritypt*phPuritypt )";
+      sieieCut=" && phPuritysieie<0.0102";
+      sieieCutSideBand=" && phPuritysieie>0.0102 && phPuritysieie<0.014";
       PHIsoAbsCut= 0.28;   
       PHIsoRelCut = "0.0053"; 
       RescaledVar =TString::Format("(-rho*phPurityEAEGamma+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
       RescaledRNDVar =TString::Format("(-rho*phPurityEAEGamma+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)");  
     }else if(phid=="MEDIUM50ns"){
       Twp = "MEDIUM50ns";
-      mainCut="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&phPurityElectronVeto&&nphotonsPurity==1&&phPuritypt>175&&phPurityCHiso<1.31 && phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
-      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0)&&abs(phPurityeta)<1.4442&&nphotonsPurity==1&&phPuritypt>175&&phPurityCHiso<1.31&&phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
-      sieieCut="&&phPuritysieie<0.010";
-      sieieCutSideBand="&&phPuritysieie>0.010&&phPuritysieie<0.014";
+      mainCut="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)<1.4442 && phPurityElectronVeto && nphotonsPurity==1 && phPuritypt>175 && phPurityCHiso<1.31  &&  phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
+      mainCutQCD="(hltphoton165 > 0 || hltphoton175 > 0) && abs(phPurityeta)<1.4442 && nphotonsPurity==1 && phPuritypt>175 && phPurityCHiso<1.31 && phPurityNHiso< (0.6+exp(0.0044*phPuritypt+0.5809))";
+      sieieCut=" && phPuritysieie<0.010";
+      sieieCutSideBand=" && phPuritysieie>0.010 && phPuritysieie<0.014";
       PHIsoAbsCut= 1.33;   
       PHIsoRelCut = "0.0043"; 
       RescaledVar =TString::Format("(-rho*phPurityEAEGamma+phPurityPHiso-")+PHIsoRelCut+TString::Format("*phPuritypt)"); 
@@ -443,14 +443,14 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
   mainCutQCD += ptCut;
   std::cout<<mainCut<<std::endl;
  
-  TChain* Tree  = new TChain(); 
-  //Tree->Add("../rootfiles/Single_Photon_Run2D_25ns_2301_0000.root/tree/tree");////
-  //  Tree->Add("SinglePhoton_data_20062016.root/tree/tree");////
-  Tree->Add("datatree.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //Tree->Add("../rootfiles/Single_Photon_Run2D_25ns_2301_0000.root");////
+  //  Tree->Add("SinglePhoton_data_20062016.root");////
+  Tree->Add("datatree.root");////
 
-  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root/tree/tree");////
+  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root");////
+  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root");////
+  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root");////
 
   Tree->SetTitle("Tree");
   Tree->SetName("Tree");
@@ -465,8 +465,9 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
     AddSignalTemplateRND04(w, Tree);  
     AddBkgTemplate(w, Tree);    
     ModelFit(w);
-    ComputeAllSystUnc(w, "EB", "MEDIUM");
-    PlotAllSystUnc(w, "EB", "MEDIUM");
+    // >>>>>>>>> no systematics for now
+    // ComputeAllSystUnc(w, "EB", "MEDIUM");
+    // PlotAllSystUnc(w, "EB", "MEDIUM");
  
   }
  
@@ -483,7 +484,7 @@ void runfits(RooWorkspace* w,std::string region, std::string phid, std::string p
 void AddData(RooWorkspace* w, TTree* tree) {  
   TH1F* h_data = new TH1F("h_data", "h_data", nbins, minFit, maxFit );
   h_data->Sumw2();
-  tree->Draw("phPurityPHiso>>h_data",mainCut+sieieCut+TString::Format("&&njets<=3"));//nJets<=3
+  tree->Draw("phPurityPHiso>>h_data",mainCut+sieieCut+TString::Format("  &&  njets<=3"));//nJets<=3
   RooDataHist* ReducedDataHist = new RooDataHist("DataHist","DataHist",*w->var("phPurityPHiso"), Import(*h_data) );
   w->import(*ReducedDataHist);  
 }
@@ -494,7 +495,7 @@ void AddData(RooWorkspace* w, TTree* tree) {
 void AddSignalTemplate(RooWorkspace* w, TTree* tree) {  
   TH1F* h_sig = new TH1F("h_sig", "h_sig", nbins, minFit, maxFit );
   h_sig->Sumw2();
-  tree->Draw("phPurityPHiso>>h_sig",mainCut+sieieCut+TString::Format("&&njets<=3"));
+  tree->Draw("phPurityPHiso>>h_sig",mainCut+sieieCut+TString::Format("  &&  njets<=3"));
   RooDataHist* ReducedDataHist = new RooDataHist("SignalDataHist","SignalDataHist",*w->var("phPurityPHiso"), Import(*h_sig) );
   RooHistPdf* ReducedHistPdf = new RooHistPdf("SignalDataHistPdf","SignalDataHistPdf",*w->var("phPurityPHiso"),*ReducedDataHist);
   w->import(*ReducedDataHist);  
@@ -562,10 +563,10 @@ void AddBkgTemplate(RooWorkspace* w, TTree* tree) {
 void AddSignalMCRNDRC08(RooWorkspace* w){
 
   RooArgSet* ntplVars_match = defineVariables_match();  
-  TChain* Tree  = new TChain(); 
-  //  Tree->Add("../rootfiles/GJets_HTs_RC08.root/tree/tree");////
-  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root/tree/tree");////
-  Tree->Add("GJet_MC_20062016.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //  Tree->Add("../rootfiles/GJets_HTs_RC08.root");////
+  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root");////
+  Tree->Add("GJet_MC_20062016.root");////
   Tree->SetTitle("TreeMCRC08");
   Tree->SetName("TreeMCRC08");
   // RooDataSet SignalMC("MCRC08","SignalMCRC08",Tree,*ntplVars_match,mainCutQCD+sieieCut+TString::Format(""),"1");
@@ -589,13 +590,13 @@ void AddSignalMCRNDRC08(RooWorkspace* w){
   ///add MC matching
   TH1F* h_sigMCRNDmatch = new TH1F("h_sigMCRNDmatch", "h_sigMCRNDmatch", nbins, minFit, maxFit );
   h_sigMCRNDmatch->Sumw2();  
-  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  //Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*1"));
+  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  //Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*1"));
   TH1F* h_sigMCRNDShapeMatch = new TH1F("h_sigMCRNDShapeMatch", "h_sigMCRNDShapeMatch", nbins, minFit, maxFit );
   h_sigMCRNDShapeMatch->Sumw2();  
-  //  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  //Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*1"));
+  //  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3 && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  //Tree->Draw("phPurityRND08PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*1"));
   RooDataHist* ReducedDataHistShapeMatch = new RooDataHist("SignalMCHistRNDShapeMatch","SignalMCHistRNDShapeMatch",*w->var("phPurityPHiso"), Import(*h_sigMCRNDShapeMatch) );
   RooHistPdf* ReducedHistPdfShapeMatch = new RooHistPdf("SignalMCHistPdfRNDShapeMatch","SignalMCHistPdfRNDShapeMatch",*w->var("phPurityPHiso"),*ReducedDataHistShapeMatch);
   w->import(*ReducedDataHistShapeMatch);  
@@ -611,9 +612,9 @@ void AddSignalMCRNDRC08(RooWorkspace* w){
 void AddSignalMCRND(RooWorkspace* w){
  std::cout<<"flag"<<std::endl;
   RooArgSet* ntplVars_match = defineVariables_match();  
-  TChain* Tree  = new TChain(); 
-  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root/tree/tree");////
-  Tree->Add("GJet_MC_20062016.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root");////
+  Tree->Add("GJet_MC_20062016.root");////
 
   Tree->SetTitle("TreeMC");
   Tree->SetName("TreeMC");
@@ -639,13 +640,13 @@ void AddSignalMCRND(RooWorkspace* w){
   ///add MC matching
   TH1F* h_sigMCRNDmatch = new TH1F("h_sigMCRNDmatch", "h_sigMCRNDmatch", nbins, minFit, maxFit );
   h_sigMCRNDmatch->Sumw2();  
-  Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  //Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*1"));
+  Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  //Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDmatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*1"));
 
   TH1F* h_sigMCRNDShapeMatch = new TH1F("h_sigMCRNDShapeMatch", "h_sigMCRNDShapeMatch", nbins, minFit, maxFit );
   h_sigMCRNDShapeMatch->Sumw2();  
-  Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDShapeMatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  //Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*1"));
+  Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDShapeMatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3 && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  //Tree->Draw("phPurityRND04PHiso>>h_sigMCRNDShapeMatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*1"));
   RooDataHist* ReducedDataHistShapeMatch = new RooDataHist("SignalMCHistRNDShapeMatch","SignalMCHistRNDShapeMatch",*w->var("phPurityPHiso"), Import(*h_sigMCRNDShapeMatch) );
   RooHistPdf* ReducedHistPdfShapeMatch = new RooHistPdf("SignalMCHistPdfRNDShapeMatch","SignalMCHistPdfRNDShapeMatch",*w->var("phPurityPHiso"),*ReducedDataHistShapeMatch);
   w->import(*ReducedDataHistShapeMatch);  
@@ -659,17 +660,17 @@ void AddSignalMCRND(RooWorkspace* w){
 void AddSignalMC(RooWorkspace* w){
   std::cout<<"flag"<<std::endl;
   RooArgSet* ntplVars_match = defineVariables_match();  
-  TChain* Tree  = new TChain(); 
-  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //Tree->Add("../rootfiles/GJets_0611_05Oct2015_Loose_0000_MEDIUMIDok.root");////
   //  Tree->Add("MCmatching/GJet_Pt-15To6000_0000_wMatching_Loose.root/tree");
-  Tree->Add("GJet_MC_20062016.root/tree/tree");////
+  Tree->Add("GJet_MC_20062016.root");////
   Tree->SetTitle("TreeMC");
   Tree->SetName("TreeMC");
   std::cout<<"flag"<<std::endl;
   TH1F* h_sigMC = new TH1F("h_sigMC", "h_sigMC", nbins, minFit, maxFit );
   h_sigMC->Sumw2();  
-  Tree->Draw("phPurityPHiso>>h_sigMC",mainCutQCD+TString::Format("*xsec*wgt/wgtsum"));//&&njets==1
-  //Tree->Draw("phPurityPHiso>>h_sigMC",mainCutQCD+TString::Format("*1"));//&&njets==1
+  Tree->Draw("phPurityPHiso>>h_sigMC",mainCutQCD+TString::Format("*xsec*wgt/wgtsum"));// && njets==1
+  //Tree->Draw("phPurityPHiso>>h_sigMC",mainCutQCD+TString::Format("*1"));// && njets==1
   RooDataHist* ReducedDataHist = new RooDataHist("SignalMCHist","SignalMCHist",*w->var("phPurityPHiso"), Import(*h_sigMC) );
   RooHistPdf* ReducedHistPdf = new RooHistPdf("SignalMCHistPdf","SignalMCHistPdf",*w->var("phPurityPHiso"),*ReducedDataHist);
   w->import(*ReducedDataHist);  
@@ -679,8 +680,8 @@ void AddSignalMC(RooWorkspace* w){
   ///add MC matching
   TH1F* h_sigMCmatch = new TH1F("h_sigMCmatch", "h_sigMCmatch", nbins, minFit, maxFit );
   h_sigMCmatch->Sumw2();  
-  Tree->Draw("phPurityPHiso>>h_sigMCmatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));//&&njets==1
-  //Tree->Draw("phPurityPHiso>>h_sigMCmatch",TString::Format("(ismatch&&")+mainCutQCD+TString::Format(")*1"));//&&njets==1
+  Tree->Draw("phPurityPHiso>>h_sigMCmatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))<0.3 && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));// && njets==1
+  //Tree->Draw("phPurityPHiso>>h_sigMCmatch",TString::Format("(ismatch && ")+mainCutQCD+TString::Format(")*1"));// && njets==1
   RooDataHist* ReducedDataHistMatch = new RooDataHist("SignalMCHistmatch","SignalMCHistmatch",*w->var("phPurityPHiso"), Import(*h_sigMCmatch) );
   RooHistPdf* ReducedHistPdfMatch = new RooHistPdf("SignalMCHistPdfmatch","SignalMCHistPdfmatch",*w->var("phPurityPHiso"),*ReducedDataHistMatch);
   w->import(*ReducedDataHistMatch);  
@@ -695,10 +696,10 @@ void AddSignalMC(RooWorkspace* w){
 void AddBkgMC(RooWorkspace* w){
 
   RooArgSet* ntplVars_match = defineVariables_match();  
-  TChain* Tree  = new TChain(); 
-  //Tree->Add("../rootfiles/QCD_EMEnriched_2810_0000.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //Tree->Add("../rootfiles/QCD_EMEnriched_2810_0000.root");////
   //  Tree->Add("MCmatching/GJet_Pt-15To6000_0000_wMatching_Loose.root/tree");
-  Tree->Add("QCD_MC_20062016.root/tree/tree");////
+  Tree->Add("QCD_MC_20062016.root");////
   Tree->SetTitle("TreeMC");
   Tree->SetName("TreeMC");
   //  RooDataSet BkgMC("MCbkg","BkgMC",Tree,*ntplVars_match,mainCutQCD+sieieCutSideBand+TString::Format(""),"1");
@@ -716,8 +717,8 @@ void AddBkgMC(RooWorkspace* w){
   ///inverting MC matching
   TH1F* h_bkgMCNOmatch = new TH1F("h_bkgMCNOmatch", "h_bkgMCNOmatch", nbins, minFit, maxFit );
   h_bkgMCNOmatch->Sumw2();  
-  Tree->Draw("phPurityPHiso>>h_bkgMCNOmatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))>2&&")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
-  //Tree->Draw("phPurityPHiso>>h_bkgMCNOmatch",TString::Format("(ismatch==0&&")+mainCutQCD+TString::Format(")*1"));
+  Tree->Draw("phPurityPHiso>>h_bkgMCNOmatch",TString::Format("(sqrt(pow((wzeta-pPurityheta),2)+pow(deltaPhi(wzphi,phPurityphi),2))>2 && ")+mainCutQCD+TString::Format(")*xsec*wgt/wgtsum"));
+  //Tree->Draw("phPurityPHiso>>h_bkgMCNOmatch",TString::Format("(ismatch==0 && ")+mainCutQCD+TString::Format(")*1"));
   RooDataHist* ReducedDataHistMatch = new RooDataHist("BkgMCHistNOmatch","BkgMCHistNOmatch",*w->var("phPurityPHiso"), Import(*h_bkgMCNOmatch) );
   RooHistPdf* ReducedHistPdfMatch = new RooHistPdf("BkgMCHistPdfNOmatch","BkgMCHistPdfNOmatch",*w->var("phPurityPHiso"),*ReducedDataHistMatch);
   w->import(*ReducedDataHistMatch);  
@@ -763,8 +764,8 @@ void ReduceBkgMC(RooWorkspace* w, TString ptrange, TString suffix){
 
 void PlotSignalTemplateMCs(RooWorkspace* w){
   AddSignalMCRND(w);
-  ReduceSignalMCRND(w, "phPuritypt>100&&phPuritypt<=200", "_100to200");  
-  ReduceSignalMCRND(w, "phPuritypt>200&&phPuritypt<=250", "_200to250");  
+  ReduceSignalMCRND(w, "phPuritypt>100 && phPuritypt<=200", "_100to200");  
+  ReduceSignalMCRND(w, "phPuritypt>200 && phPuritypt<=250", "_200to250");  
   ReduceSignalMCRND(w, "phPuritypt>250", "_250toInf");  
  
 
@@ -818,8 +819,8 @@ void PlotSignalTemplateMCs(RooWorkspace* w){
 
 void PlotBkgTemplateMCs(RooWorkspace* w){
   AddBkgMC(w);
-  ReduceBkgMC(w, "phPuritypt>100&&phPuritypt<=200", "_100to100");  
-  ReduceBkgMC(w, "phPuritypt>200&&phPuritypt<=250", "_100to250");  
+  ReduceBkgMC(w, "phPuritypt>100 && phPuritypt<=200", "_100to100");  
+  ReduceBkgMC(w, "phPuritypt>200 && phPuritypt<=250", "_100to250");  
   ReduceBkgMC(w, "phPuritypt>250", "_250toInf");  
  
 
@@ -873,13 +874,13 @@ void PlotBkgTemplateMCs(RooWorkspace* w){
 
 
 void PlotSignalTemplates(RooWorkspace* w){
-  TChain* Tree  = new TChain(); 
-  //  Tree->Add("SinglePhoton_data_20062016.root/tree/tree");////
-  Tree->Add("datatree.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //  Tree->Add("SinglePhoton_data_20062016.root");////
+  Tree->Add("datatree.root");////
 
-  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root/tree/tree");////
-  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root/tree/tree");////
+  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root");////
+  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root");////
+  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root");////
 
   Tree->SetTitle("Tree");
   Tree->SetName("Tree");
@@ -944,13 +945,13 @@ void PlotSignalTemplates(RooWorkspace* w){
 
 
 void PlotBkgTemplates(RooWorkspace* w){
-  TChain* Tree  = new TChain(); 
-  //  Tree->Add("SinglePhoton_data_20062016.root/tree/tree");////
-  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root/tree/tree");////
-  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root/tree/tree");////
+  TChain* Tree  = new TChain("tree/tree"); 
+  //  Tree->Add("SinglePhoton_data_20062016.root");////
+  //  Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0000.root");////
+  //Tree->Add("SinglePhoton-Run2016B-PromptReco-v2_0001.root");////
+  //Tree->Add("SinglePhoton-Run2016C-PromptReco-v2_0000.root");////
 
-  Tree->Add("datatree.root/tree/tree");////
+  Tree->Add("datatree.root");////
 
   Tree->SetTitle("Tree");
   Tree->SetName("Tree");
@@ -1050,7 +1051,7 @@ RooRealVar* ModelFit(RooWorkspace* w) {
   TTree* tree = (TTree*) w->obj("Tree");
   TH1F* h_dataRescaled = new TH1F("h_dataRescaled", "h_dataRescaled", 5*nbins, minFit-5, maxFit+5 );
   h_dataRescaled->Sumw2();
-  tree->Draw(RescaledVar+TString::Format(">>h_dataRescaled"),mainCut+sieieCutSideBand+TString::Format("&&njets<=3"));//&&njets==1
+  tree->Draw(RescaledVar+TString::Format(">>h_dataRescaled"),mainCut+sieieCutSideBand+TString::Format(" && njets<=3"));// && njets==1
   std::cout<< h_dataRescaled->Integral()<<"   "<<data->sumEntries()<<std::endl;
   h_dataRescaled->Scale(data->sumEntries()/h_dataRescaled->Integral());
   
@@ -1451,7 +1452,7 @@ void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistP
     res = fitFunc->fitTo(*genData, Range(minFit,maxFit),/*RooFit::FitOptions("MHTER"),*/SumW2Error(kTRUE), Save(kTRUE));   //
     res->Print("v");
     bool makePlot = true;
-    if(makePlot&& (iToy==0||iToy==10 ||iToy==20||iToy==100 ||iToy==500)){
+    if(makePlot &&  (iToy==0||iToy==10 ||iToy==20||iToy==100 ||iToy==500)){
      
       TH1F* h_pdf;
       TH1F* h_sig;
@@ -1493,7 +1494,7 @@ void ComputeSystUnc(RooWorkspace*w, std::string region, std::string id, RooHistP
     systPurity=((RooRealVar *)(res->floatParsFinal().find("frac")))->getVal();
     // double systPurityErr=((RooRealVar *)(res->floatParsFinal().find("frac")))->getError();
     std::cout<<systPurity<<std::endl;
-    if(systPurity>0.5 &&systPurity<1.2)h_purity->Fill(systPurity-purity->getVal());   
+    if(systPurity>0.5 && systPurity<1.2)h_purity->Fill(systPurity-purity->getVal());   
 
   }
  
