@@ -17,3 +17,9 @@ The Makefile will compile each .C source in the current directory and use them w
 
 Objects files (.o) will be store in tmp/objects directory created by Makefile in the current one. The executable is in tmp/.
 
+
+
+==========================
+--> WARNING
+==========================
+At the moment, the code compiles but it crashes during execution. Work in progress ...
