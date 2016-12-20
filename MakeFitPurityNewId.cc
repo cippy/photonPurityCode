@@ -61,7 +61,7 @@ using namespace RooStats;
 
 //
 
-void MakeFitPurity(string phid){ 
+void MakeFitPurityNewId(string phid){ 
   //  runfits("EB", "LOOSE");
   runAllfits(phid);
 
@@ -78,7 +78,7 @@ Int_t main(int argc, char* argv[]) {
     exit(EXIT_FAILURE);
   }
   
-  MakeFitPurity(phid);
+  MakeFitPurityNewId(phid);
   return 0;
 
 }
