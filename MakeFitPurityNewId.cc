@@ -63,6 +63,7 @@ using namespace RooStats;
 
 void MakeFitPurityNewId(string phid){ 
   //  runfits("EB", "LOOSE");
+  cout << "Going to use runAllfits(\"" << phid << "\") ..." << endl;
   runAllfits(phid);
 
 }
